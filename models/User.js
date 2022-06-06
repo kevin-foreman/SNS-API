@@ -8,7 +8,12 @@ const UserSchema = new Schema(
             required: 'You need to provide a user name.',
             trim: true
         },
-
+        thoughts: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: 'Thought'
+            }
+        ]
     },
     {
         toJSON: {
