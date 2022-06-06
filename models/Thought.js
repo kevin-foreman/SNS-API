@@ -45,7 +45,7 @@ const ThoughtSchema = new Schema(
         },
         createdAt: {
             type: Date,
-            default: Date.nowk,
+            default: Date.now,
             get: createdAtVal => (createdAtVal)
         },
         reactions: [ReactionSchema]
