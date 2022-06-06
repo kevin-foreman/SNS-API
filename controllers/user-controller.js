@@ -69,8 +69,23 @@ const userController = {
             res.json(dbUserData);
         })
         .catch(err => res.status(400).json(err));
-    }
+    },
 
+    //  Add a friend to a user
+    addFriend({ params }, res) {
+        User.findOneAndUpdate(
+            { _id: params.userId },
+            { $addToSet: [ friends: params.friendId ] },
+            {new: true, runValidators: true}
+        )
+        .then (dbUserData => {
+            if (!dbUserData) {
+                res.status(404).json({ message: 'No user found with that Id' });
+                return;
+            }
+            res.json(dbUserData);
+        })
+    }
 }
 
 module.exports = userController;
