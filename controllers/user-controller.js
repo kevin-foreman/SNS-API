@@ -83,8 +83,29 @@ const userController = {
                 res.status(404).json({ message: 'No user found with that Id' });
                 return;
             }
-            res.json(dbUserData);
+            // add friend's user ID to user's friend list
+            User.findOneAndUpdate(
+                { _id: params.friendId },
+                { $addToSet: { friends: params.userId } },
+                { new: true, runValidators: true }
+            )
+            .then (dbUserData2 => {
+                if (!dbUserData2) {
+                    res.status(404).json({ message: 'No user found with that friend ID' });
+                    return;
+                }
+                res.json(dbUserData);
+            })
+            .catch(err => res.json(err));
         })
+        .catch(err => res.json(err))
+    },
+
+    // Remove a friend (oh no, was it political?)
+    deleteFriend({ params }, res) {
+        User.findOneAndUpdate(
+            
+        )
     }
 }
 
