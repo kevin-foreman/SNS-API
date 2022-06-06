@@ -76,23 +76,6 @@ const thoughtController = {
             .catch(err => res.json(err));
     },
 
-    addReaction({ params, body }, res) {
-
-        Thought.findOneAndUpdate(
-            { _id: params.thoughtId },
-            { $push: { reactions: body } },
-            { new: true, runValidators: true }
-        )
-            .then(dbUserData => {
-                if (!dbUserData) {
-                    res.status(404).json({ message: 'No user found with that ID.' });
-                    return;
-                }
-                res.json(dbUserData);
-            })
-            .catch(err => res.json(err));
-    },
-
     // Remove a reaction
     removeReaction({ params }, res) {
         Thought.findOneAndUpdate(
