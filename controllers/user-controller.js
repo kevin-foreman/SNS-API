@@ -102,11 +102,33 @@ const userController = {
     },
 
     // Remove a friend (oh no, was it political?)
-    deleteFriend({ params }, res) {
+    removeFriend({ params }, res) {
         User.findOneAndUpdate(
-            
+            { _id: params.UserId },
+            { $pull: { friends: params.friendId } },
+            { new: true, runValidators: true }
         )
+        .then (dbUserData => {
+            if (!dbUserData) {
+                res.status(404).json({ message: 'No user found with that ID' });
+                return;
+            }
+            User.findOneAndUpdate(
+                { _id: params.friendsId },
+                { $pull: { friends: params.userId } },
+                { new: true, runValidators: true }
+            )
+            .then (dbUserData2 => {
+                if (!dbUserData2) {
+                    res.status(404).json({ message: 'No user found with that friend ID' });
+                    return;
+                }
+                res.json({ message: 'Friend removed' });
+            })
+            .catch(err => res.json(err));
+        })
+        .catch(err => res.json(err));
     }
-}
+};
 
 module.exports = userController;
