@@ -7,16 +7,16 @@ const thoughtSchema = new Schema(
         thoughtText: {
             type: String,
             required: true,
-            match: '/^.{1,280}$/'
+            maxLength: 280
+        },
+        username: {
+            type: String,
+            required: true
         },
         createdAt: {
             type: Date,
             default: Date.now,
             get: createdAtVal => (createdAtVal)
-        },
-        username: {
-            type: String,
-            required: true
         },
         reactions: [reactionSchema]
     },
