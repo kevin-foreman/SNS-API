@@ -75,14 +75,14 @@ const thoughtController = {
         .catch(err => res.status(400).json(err));
     },
 
-    // Remove a reaction
+    // Remove a reaction to a thought
     removeReaction({ params }, res) {
         Thought.findOneAndUpdate(
             { _id: params.thoughtId },
-            { $pull: { reactions: { reactionId: params.reactionId } } },
+            { $pull: { reactions: { reactionId: body.reactionId } } },
             { new: true, runValidators: true }
         )
-            .then(dbThoughtData => {
+        .then(dbThoughtData => {
                 if(!dbThoughtDat) {
                     res.status(404).json({ message: 'No thought exists with that ID.'});
                     return;
@@ -90,7 +90,6 @@ const thoughtController = {
                 res.json({ message: 'Reaction deleted.'});
             })
             .catch(err => res.status(500).json(err));
-        },
     },
 
     // Remove a thought
@@ -103,10 +102,10 @@ const thoughtController = {
                 }
                 User.findOneAndUpdate(
                     { username: dbThoughtData.username },
-                    { $pull: { thoughts: params.id } },
+                    { $pull: { thoughts: params.id } }
                 )
                 .then(() => {
-                    res.json({ message: 'Thought deleted' });
+                    res.json({ message: 'Thought removed' });
                 })
                 .catch(err => res.status(500).json(err));
             })
@@ -125,16 +124,7 @@ const thoughtController = {
             })
             .catch(err => res.status(400).json(err));
     },
+}
 
-    // Remove a reaction to a thought
-    removeReaction({ params }, res) {
-        Thought.findOneAndUpdate(
-            { _id: params.thoughtId },
-            { $pull: { reactions: { reactionId: params.reactionId } } },
-            { new: true, runValidators: true }
-        )
-            .then(dbUserData => res.json(dbUserData))
-            .catch(err => res.json(err));
-    },
 
 module.exports = thoughtController;
