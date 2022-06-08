@@ -1,9 +1,9 @@
 const { Schema, model } = require('mongoose');
 const dateFormat = require('../utils/dateFormat');
 
-const UserSchema = new Schema(
+const userSchema = new Schema(
     {
-        userName: {
+        username: {
             type: String,
             unique: true,
             required: 'You need to provide a user name.',
@@ -15,38 +15,25 @@ const UserSchema = new Schema(
             unique: true,
             match: [/.+@.+\..+/]
         },
-        thoughts: [
-            {
-                type: Schema.Types.ObjectId,
-                ref: 'Thought'
-            }
-        ],
-        friends: [
-            {
-                type: Schema.Types.ObjectId,
-                ref: 'User'
-            }
-        ]
+        thoughts: [{ type: Schema.Types.ObjectId, ref: 'Thought' }],
+        friends: [{ type: Schema.Types.ObjectId, ref: 'User' }]
     },
     {
         toJSON: {
             virtuals: true,
             getters: true
         },
-        id: false
+    id: false
     }
 );
 
-// Get tally of thoughts and reactions per user
-UserSchema.virtual('thoughtCount').get(function () {
-    return this.thoughts.reduce((total, thought) => total + thought.reactions.length + 1, 0);
-});
+// Get tally of friends per user
 
-UserSchema.virtual('friendCount').get(function() {
+userSchema.virtual('friendCount').get(function() {
     return this.friends.length;
 });
 
 // Create a User model using the schema
-const User = model('User', UserSchema);
+const User = model('User', userSchema);
 
 module.exports = User;

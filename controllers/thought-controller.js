@@ -1,5 +1,5 @@
-const { json } = require('express/lib/response');
-const { Thought, User, Reaction } = require('../models');
+// const { json } = require('express/lib/response');
+const { Thought, User } = require('../models');
 
 const thoughtController = {
 

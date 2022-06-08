@@ -1,4 +1,4 @@
-const { User, Thought, Reaction } = require('../models');
+const { User, Thought } = require('../models');
 
 const userController = {
     getAllUser(req, res) {
@@ -62,7 +62,22 @@ const userController = {
                 res.status(404).json({ message: 'No user found with that ID.' });
                 return;
             }
-            res.json(dbUserData);
+
+            // Bonus to delete all associated traits a user has, on delete of user
+            // This removes the user from another's friend array
+            User.updateMany(
+                { _id: {$in: dbUserData.friends } },
+                {$pull: { friends: params.id } }
+            )
+            .then(() => {
+                // This removes comments made by the user
+                Thought.deleteMany({ username: dbUserData.username })
+                .then(() => {
+                    res.json({ message: 'User deleted' });
+                })
+                .catch(err => res.status(400).json(err));
+            })
+            .catch(err => res.status(400).json(err));
         })
         .catch(err => res.status(400).json(err));
     },
