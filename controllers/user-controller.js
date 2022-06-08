@@ -4,12 +4,12 @@ const userController = {
     getAllUser(req, res) {
         User.find({})
         .select('-__v')
-        .sort({ _id: -1})
+        // .sort({ _id: -1})
         .then(dbUserData => res.json(dbUserData))
         .catch(err => {
             console.log(err);
-            res.status(400).json(err);
-        });
+            res.status(500).json(err);
+        })
     },
 
     // Get a single user by ID
@@ -65,6 +65,7 @@ const userController = {
 
             // Bonus to delete all associated traits a user has, on delete of user
             // This removes the user from another's friend array
+            // and deletes everything the user contributed to in thoughts and reactions
             User.updateMany(
                 { _id: {$in: dbUserData.friends } },
                 {$pull: { friends: params.id } }
@@ -115,7 +116,7 @@ const userController = {
     // Remove a friend (oh no, was it political?)
     removeFriend({ params }, res) {
         User.findOneAndUpdate(
-            { _id: params.UserId },
+            { _id: params.userId },
             { $pull: { friends: params.friendId } },
             { new: true, runValidators: true }
         )

@@ -31,7 +31,7 @@ const thoughtController = {
                 }
                 res.json(dbThoughtData);
             })
-            .catch(err => res.status(500)json(err));
+            .catch(err => res.status(500).json(err));
     },
 
     getThoughtById({ params }, res) {
@@ -101,19 +101,14 @@ const thoughtController = {
                     return res.status(404).json({ message: 'No thought found with this ID.' });
                     return;
                 }
-                return User.findOneAndUpdate(
-                    { _id: params.userId },
-                    { $pull: { thoughts: params.thoughtId } },
-                    { new: true }
-                );
-            })
-            // delete reference to the thought from the user who posted it
-            User.findOneAndUpdate(
-                { username: dbThoughtData.username },
-                { $pull: { thoughts: params.id } }
-            )
-            .then(() => {
-                res.json({ message: 'Thought deleted.' } );
+                User.findOneAndUpdate(
+                    { username: dbThoughtData.username },
+                    { $pull: { thoughts: params.id } },
+                )
+                .then(() => {
+                    res.json({ message: 'Thought deleted' });
+                })
+                .catch(err => res.status(500).json(err));
             })
             .catch(err => res.status(500).json(err));
     },
@@ -141,6 +136,5 @@ const thoughtController = {
             .then(dbUserData => res.json(dbUserData))
             .catch(err => res.json(err));
     },
-};
 
 module.exports = thoughtController;
