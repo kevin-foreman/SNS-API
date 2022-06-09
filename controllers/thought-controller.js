@@ -43,7 +43,7 @@ const thoughtController = {
             .select('-__v')
             .then(dbThoughtData => {
                 // If no thought is found, send 404
-                if (!dbUserData) {
+                if (!dbThoughtData) {
                     res.status(404).json({ message: 'No thought found with this id!' });
                     return;
                 }

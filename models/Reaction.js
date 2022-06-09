@@ -13,7 +13,7 @@ const reactionSchema = new Schema(
             type: String,
             required: true,
             trim: true,
-            match: '/^.{0,280}$/'
+            maxlength: 280
 
         },
 
